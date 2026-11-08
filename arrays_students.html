@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management System</title>
+</head>
+<body>
+
+<script>
+
+// 1. Student Class
+class Student {
+    constructor(id, name, grades, attendance) {
+        this.id = id;
+        this.name = name;
+        this.grades = grades;
+        this.attendance = attendance;
+    }
+
+    // 2. Calculate Average using reduce
+    calculateAverage() {
+        const total = this.grades.reduce((sum, grade) => sum + grade, 0);
+        return total / this.grades.length;
+    }
+
+    // 3. Calculate Grade
+    getGrade(average) {
+        if (average >= 90) {
+            return "A";
+        } else if (average >= 80) {
+            return "B";
+        } else if (average >= 70) {
+            return "C";
+        } else if (average >= 60) {
+            return "D";
+        } else if (average >= 50) {
+            return "E";
+        } else {
+            return "F";
+        }
+    }
+
+    // 4. Final Result using &&
+    getResult() {
+        const average = this.calculateAverage();
+
+        if (average >= 50 && this.attendance >= 75) {
+            return "ناجح";
+        } else {
+            return "يحتاج مراجعة";
+        }
+    }
+}
+
+// 5. Students List
+const studentsList = [
+    new Student(1, "Ahmed", [95, 90, 100], 95),
+    new Student(2, "Mona", [80, 85, 90], 90),
+    new Student(3, "Ali", [45, 45, 45], 80),
+    new Student(4, "Sara", [48, 46, 47], 85)
+];
+
+// 6. Filter struggling students
+const strugglingStudents = studentsList.filter(student => {
+    const average = student.calculateAverage();
+    return average >= 40 && average <= 49;
+});
+
+// 7. Add 5 Mercy Marks using map
+const mercyStudents = strugglingStudents.map(student => {
+    return {
+        name: student.name,
+        oldAverage: student.calculateAverage(),
+        newAverage: student.calculateAverage() + 5
+    };
+});
+
+// 8. Calculate total using reduce
+const totalNewAverages = mercyStudents.reduce((sum, student) => {
+    return sum + student.newAverage;
+}, 0);
+
+// 9. Calculate Mercy Average with protection
+let mercyAverage = 0;
+
+if (mercyStudents.length > 0) {
+    mercyAverage = totalNewAverages / mercyStudents.length;
+}
+
+// 10. Print Student Reports
+console.log("===== Students Reports =====");
+
+studentsList.forEach(student => {
+    const average = student.calculateAverage();
+
+    console.log("Name:", student.name);
+    console.log("Average:", average);
+    console.log("Grade:", student.getGrade(average));
+    console.log("Result:", student.getResult());
+    console.log("----------------------");
+});
+
+// 11. Print Mercy Students
+console.log("===== Mercy Students =====");
+console.log(mercyStudents);
+
+// 12. Print Mercy Average
+console.log("Mercy Average:", mercyAverage);
+
+</script>
+
+</body>
+</html>
